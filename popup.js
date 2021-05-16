@@ -1,5 +1,8 @@
-const updatePopup = function(startIndex = 0) {
+const updatePopup = function(startIndex = 0, type = undefined) {
   return function(res) {
+    let body = encodeURIComponent(res[0].result);
+    if (type !== undefined) body += `&type=${type}`;
+
     fetch(
       "https://hyperservices.herokuapp.com/validation", {
         "headers": {
@@ -11,7 +14,7 @@ const updatePopup = function(startIndex = 0) {
           "sec-fetch-site": "same-origin",
           "x-requested-with": "XMLHttpRequest"
         },
-        "body": `text=${encodeURIComponent(res[0].result)}`,
+        "body": `text=${body}`,
         "method": "POST",
       }
     ).then(response => response.json()).
@@ -25,7 +28,7 @@ const updatePopup = function(startIndex = 0) {
         document.getElementById("spinner").hidden = true;
         document.getElementById("text-container").innerHTML = list.innerHTML
       }
-      )
+    )
   }
 }
 
@@ -33,7 +36,7 @@ const validate = function() {
   chrome.tabs.query(
     { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
     function(tabs) {
-      if (tabs[0].url.match(/.*stepik.org/))
+      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},
@@ -44,7 +47,27 @@ const validate = function() {
           },
           updatePopup(),
         );
-      if (tabs[0].url.match(/.*hyperskill.org/))
+      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+        chrome.scripting.executeScript(
+          {
+            target: {tabId: tabs[0].id},
+            function: () => {
+              let description = document.
+                getElementsByClassName('html-content')[0].
+                getElementsByTagName('span')[0].
+                innerHTML
+              let optionsContainer = document.createElement('div');
+              let testOptions = document.getElementsByClassName("choice-quiz-show__option");
+              for (let i = 0, len = testOptions.length; i < len; i++) {
+                optionsContainer.append(testOptions[i].cloneNode(true));
+                optionsContainer.innerHTML += '\n'
+              }
+              return description + optionsContainer.innerHTML
+            }
+          },
+          updatePopup(0, {type: "task"}),
+        );
+      else if (tabs[0].url.match(/.*hyperskill.org/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},
@@ -54,7 +77,9 @@ const validate = function() {
               for (let i = 1, len = dataSections.length; i < len; i++) {
                 contentBody.append(dataSections[i].cloneNode(true));
               }
-              return contentBody.innerHTML.replaceAll('</h2>', '</h2>\n');
+              return contentBody.innerHTML.
+                replaceAll('</h2>', '</h2>\n').
+                replaceAll('<br>', '<br>\n');
             }
           },
           updatePopup(1),
