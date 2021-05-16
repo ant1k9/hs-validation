@@ -1,0 +1,27 @@
+{
+    "name": "Topic validation",
+    "description": "Helper for hyperskill topics creation",
+    "version": "0.1",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "validation.html",
+        "default_icon": "rocket.png"
+    },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+V",
+                "mac": "MacCtrl+Shift+V"
+            },
+            "description": "Validate topic on Stepik"
+        }
+    },
+    "permissions": [
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://stepik.org/",
+        "https://hyperskill.org/"
+    ]
+}
