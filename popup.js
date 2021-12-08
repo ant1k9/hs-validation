@@ -55,7 +55,7 @@ const validate = function() {
               let description = document.
                 getElementsByClassName('html-content')[0].
                 getElementsByTagName('span')[0].
-                innerHTML
+                innerHTML + '\n';
               let optionsContainer = document.createElement('div');
               let testOptions = document.getElementsByClassName("choice-quiz-show__option");
               for (let i = 0, len = testOptions.length; i < len; i++) {
