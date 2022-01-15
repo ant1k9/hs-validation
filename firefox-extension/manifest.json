@@ -1,0 +1,24 @@
+{
+    "browser_action": {
+        "default_icon": "rocket.png",
+        "default_popup": "validation.html"
+    },
+    "commands": {
+        "_execute_browser_action": {
+            "description": "Validate topic on Stepik",
+            "suggested_key": {
+                "default": "Ctrl+Shift+V",
+                "mac": "MacCtrl+Shift+V"
+            }
+        }
+    },
+    "description": "Helper for hyperskill topics creation",
+    "manifest_version": 2,
+    "name": "Topic validation",
+    "permissions": [
+        "*://stepik.org/*",
+        "*://hyperskill.org/*",
+        "activeTab"
+    ],
+    "version": "0.2"
+}
