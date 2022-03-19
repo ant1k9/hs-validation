@@ -32,7 +32,7 @@ const updatePopup = function(startIndex = 0, type = undefined) {
   }
 }
 
-const validate = function() {
+const validateTopic = function() {
   chrome.tabs.query(
     { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
     function(tabs) {
@@ -45,7 +45,7 @@ const validate = function() {
               getElementsByTagName('span')[0].
               innerHTML
           },
-          updatePopup(),
+          updatePopup(0, "theory"),
         );
       else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
         chrome.scripting.executeScript(
@@ -65,7 +65,7 @@ const validate = function() {
               return description + optionsContainer.innerHTML
             }
           },
-          updatePopup(0, {type: "task"}),
+          updatePopup(0, "task"),
         );
       else if (tabs[0].url.match(/.*hyperskill.org/))
         chrome.scripting.executeScript(
@@ -88,5 +88,54 @@ const validate = function() {
   )
 }
 
+const validateProject = function() {
+  chrome.tabs.query(
+    { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
+    function(tabs) {
+      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
+        chrome.scripting.executeScript(
+          {
+            target: {tabId: tabs[0].id},
+            function: () => document.
+              getElementsByClassName('html-content')[0].
+              getElementsByTagName('span')[0].
+              innerHTML
+          },
+          updatePopup(0, "projectDescription"),
+        );
+      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+        chrome.scripting.executeScript(
+          {
+            target: {tabId: tabs[0].id},
+            function: () => document.
+              getElementsByClassName('html-content')[0].
+              getElementsByTagName('span')[0].
+              innerHTML
+          },
+          updatePopup(0, "projectStage"),
+        );
+    }
+  )
+}
+
+const validate = function() {
+  chrome.storage.local.get(['projectMode'], function(result) {
+    if (result.projectMode) validateProject();
+    else validateTopic();
+  });
+}
+
+const loadSettings = function() {
+  const checkbox = document.getElementById('project-mode')
+  chrome.storage.local.get(['projectMode'], function(result) {
+    if (result.projectMode) checkbox.setAttribute('checked', true);
+  });
+
+  checkbox.addEventListener('change', (event) => {
+    chrome.storage.local.set({projectMode: event.target.checked}, function() { });
+  });
+}
+
 /* call on load */
+loadSettings();
 validate();
