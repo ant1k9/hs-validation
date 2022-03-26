@@ -1,7 +1,7 @@
 {
     "name": "Topic validation",
     "description": "Helper for hyperskill topics creation",
-    "version": "0.2",
+    "version": "0.3",
     "manifest_version": 3,
     "action": {
         "default_popup": "validation.html",
