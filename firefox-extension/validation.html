@@ -21,7 +21,15 @@
         </svg>
       </div>
       <div id="text-container" class="spinner"></div>
+      <div>
+        <button id="test" onclick="console.log(1)">Click me!</button>
+      </div>
       <script src="popup.js"></script>
+      <script>
+        window.addEventListener("load", (ev)=>{
+          console.log(1);
+        })
+      </script>
     </div>
   </body>
 </html>
