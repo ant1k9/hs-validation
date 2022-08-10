@@ -1,6 +1,8 @@
-function injectScript(fileName) {
+function injectScript(fileName, resolve=null) {
     let injection = document.createElement("script");
     injection.src = chrome.runtime.getURL(fileName);
+
+    injection.onload = () => { resolve ? resolve() : false; }
 
     (document.head || document.documentElement).appendChild(injection);
 }
@@ -18,7 +20,8 @@ function injectImage(fileName, tag) {
 }
 
 const images = [
-    {file: "icons/new-topic.png", tag: "newTopicIcon"}
+    {file: "icons/new-topic.png", tag: "newTopicIcon"},
+    {file: "icons/percent.png", tag: "percent"}
 ];
 
 const config = {childList: true, subtree: true};
@@ -28,12 +31,13 @@ const editorWaiter = new MutationObserver((mutations)=>{
         if (node) {
             editorWaiter.disconnect();
 
-            injectScript("injection.js");
-            injectScript("inject_class.js");
+            new Promise(resolve => {
+                injectScript("inject_class.js", resolve);
+            }).then(()=>{
+                injectScript("injection.js");
+            })
 
-            for (let img of images) {
-                injectImage(img.file, img.tag);
-            }
+            for (let img of images) injectImage(img.file, img.tag);
 
             return true;
         }

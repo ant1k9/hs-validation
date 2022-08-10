@@ -1,78 +1,49 @@
-// https://stackoverflow.com/questions/41620545/how-does-ember-inspector-get-the-data-from-the-app
-function getApplication() {
-    for (let i in Ember.Namespace.NAMESPACES) {
-        if (Ember.Namespace.NAMESPACES[i] instanceof Ember.Application) {
-            return Ember.Namespace.NAMESPACES[i]
-        }
-    }
-    
-    return false;
-}
+const helper = new StepikHelper();
 
-function getRecord(num) {
-    let store = app.__container__.lookup('service:store');
-    let steps = store.peekAll("step-source");
-    
-    for (let i in steps.content) {
-        let tmp = store.peekRecord("step-source", steps.content[i].id);
+helper.addToolbar(
+    "hseditor",
+    ["hseditor", "newtopic", "templates", "mathtex"]
+);
+
+const mathTexStyle = new CKEDITOR.style({
+    element: "span",
+    attributes: { "class": "math-tex" }
+});
+
+var mathTexStyleCommand = new CKEDITOR.styleCommand(mathTexStyle);
+
+helper.addCommand(
+    "mathTexStyle",
+    mathTexStyleCommand
+);
+
+helper.addButton("mathtex", {
+        icon: "percent",
+        label: "Inline math-tex",
+        command: "mathTexStyle",
+        toolbar: "hseditor"
+    }
+);
+
+helper.addCombo("templates", {
+    label: 'Templates',
+    title: 'Templates',
+    init: function() {
+        "use strict";
         
-        if (tmp.position == num) {
-            return tmp
-        }
-    }
-
-    return false;
-}
-
-function getActiveRecord() {
-    let loc = router.currentURL.split("/");
-    let active = loc[loc.length-1];
-
-    return getRecord(active);
-}
-
-const app = getApplication();
-const router = app.__container__.lookup("router:main");
-
-const ckeName = Object.keys(CKEDITOR.instances)[0];
-const cfg = CKEDITOR.instances[ckeName].config;
-const buffer = document.querySelector("#hse-buffer");
-
-
-
-cfg.toolbar_StepEditToolbar.push({
-    name: "hseditor",
-    items: ["hseditor", "newtopic", "templates"]
-});
-
-CKEDITOR.instances[ckeName].destroy(false);
-const editor = CKEDITOR.replace(ckeName, cfg);
-
-editor.on("change", (ev)=>{
-    const record = getActiveRecord();
-    record.block.text = editor.getData();
-})
-
-router.addObserver("url", (ev)=>{
-    setTimeout(()=>{
-        editor.setData(getActiveRecord().block.text);
-    }, 1)
-})
-
-editor.addCommand("mySimpleCommand", {
-    exec: (editor)=>{
-        console.log(1);
+        this.startGroup("Topic templates");
+        this.add("topicTemplate", "<h3>Topic</h3>", "Topic template");
+        this.add("compTemplate", "<h3>Comprehension</h3>", "Comprehension template");
+        this.add("appTemplate", "<h3>Application</h3>", "Application template");  
+    },
+    onClick: function (value) {
+        helper.editor.focus();
+        helper.editor.fire('saveSnapshot');
+        helper.editor.insertHtml(value);
+        helper.editor.fire('saveSnapshot');
     }
 })
 
-editor.ui.addButton('newtopic', {
-    icon: buffer.getAttribute("newTopicIcon"),
-    label: "New topic",
-    command: "mySimpleCommand",
-    toolbar: "hseditor, 100"
-});
+helper.start();
 
-// Router:
-// Ember.Namespace.NAMESPACES[1].__container__.lookup("router:main").transitionTo("/edit-lesson/747696/step/3");
-// Models:
-// app.__container__.lookup("container-debug-adapter:main").catalogEntriesByType("model")
+// helper.editor.getSelection().getRanges()[0].cloneContents().$

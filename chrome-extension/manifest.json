@@ -39,7 +39,8 @@
             "resources": [
                 "injection.js",
                 "inject_class.js",
-                "icons/new-topic.png"
+                "icons/new-topic.png",
+                "icons/percent.png"
             ],
             "matches": ["*://stepik.org/*", "*://hyperskill.org/*"]
         }
