@@ -10,12 +10,35 @@ const mathTexStyle = new CKEDITOR.style({
     attributes: { "class": "math-tex" }
 });
 
-var mathTexStyleCommand = new CKEDITOR.styleCommand(mathTexStyle);
+// var mathTexStyleCommand = new CKEDITOR.styleCommand(mathTexStyle);
 
-helper.addCommand(
-    "mathTexStyle",
-    mathTexStyleCommand
-);
+// helper.addCommand(
+//     "mathTexStyle",
+//     mathTexStyleCommand
+// );
+
+helper.addCommand("mathTexStyle", {
+    exec: (editor) => {
+        helper.unbindOnChange()
+            .then(()=>{
+                selection = editor.getSelection().getNative();
+                html = `<span class="math-tex">${selection}</span>`;
+                elem = CKEDITOR.dom.element.createFromHtml(html, editor.document);
+                
+                editor.insertElement(elem);
+            })
+            .then(()=>(
+                (async () => helper.updateContent())()
+            ))
+            .then(()=>{
+                // prevent doubled update
+                // KOSTYL'
+                setTimeout(()=>{
+                    helper.bindOnChange()
+                }, 1);
+            });
+    }
+})
 
 helper.addButton("mathtex", {
         icon: "percent",

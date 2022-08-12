@@ -22,9 +22,6 @@ class StepikHelper {
         this.ckConfig = CKEDITOR.instances[this.ckInstance].config;
 
         this.ckConfig.autoUpdateElement = true;
-
-        this.onChangeHandlers = [];
-        this.cancel = false;
     }
 
     set editor(value) {
@@ -67,28 +64,16 @@ class StepikHelper {
         this.ckConfig.extraPlugins = tmp.join(",");
     }
 
-    addCommand(name, callback) {
+    addCommand(name, options={}) {
         const _this = this;
         const cmd = function () {
-            if (callback instanceof CKEDITOR.styleCommand) {
-                _this.editor.addCommand(name, callback);
-            } else {
-                _this.editor.addCommand(name, {
-                    exec: (editor)=>{ callback(); }
-                });
-            }
+            _this.editor.addCommand(name, options);
         }
 
         if (this.editor === undefined) {
             this.initStack.push(cmd);
         } else {
             cmd();
-        }
-    }
-
-    addListener(eventName, callback) {
-        if (eventName == "change") {
-            this.onChangeHandlers.push(callback);
         }
     }
 
@@ -175,26 +160,31 @@ class StepikHelper {
         CKEDITOR.instances[this.ckInstance].destroy(false);
         this.editor = CKEDITOR.replace(this.ckInstance, this.ckConfig);
 
-        this.editor.on("change", (ev)=>{
-            const record = _this.getActiveStep();
-            const edTex = _this.countMathTex(_this.editor.getData());
-            const reTex = _this.countMathTex(record.block.text);
-
-            record.block.text = _this.editor.getData();
-
-            if (edTex > reTex) {
-                _this.editor.setMode("source", ()=>{
-                    _this.editor.setMode("wysiwyg");
-                });
-            }
-
-            for (let cmd of this.onChangeHandlers) cmd(ev);
-        });
+        this.bindOnChange();
 
         this.router.addObserver("url", (ev)=>{
             setTimeout(()=>{
                 _this.editor.setData(_this.getActiveStep().block.text);
             }, 1)
         })
+    }
+
+    bindOnChange() {
+        const t = this.editor.on("change", this._changeListener.bind(this));
+        this.unbindOnChange = async () => {
+            await t.removeListener();
+        };
+    }
+
+    updateContent() {
+        (async ()=>(await this.editor.getData()))()
+        .then(result=>{
+            this.editor.setData(result);
+        })
+    }
+
+    _changeListener(ev) {
+        const record = this.getActiveStep();
+        record.block.text = this.editor.getData();
     }
 }
