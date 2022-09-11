@@ -12,7 +12,8 @@
     display: none !important;
 }
 
-.hse-buffer {
+.hse-buffer,
+#hse-started {
     display: none;
     position: fixed;
     width: 0px;

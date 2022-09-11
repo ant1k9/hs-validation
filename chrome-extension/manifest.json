@@ -37,10 +37,8 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "injection.js",
-                "inject_class.js",
-                "icons/new-topic.png",
-                "icons/percent.png"
+                "extension.min.js",
+                "extension.app.js"
             ],
             "matches": ["*://stepik.org/*", "*://hyperskill.org/*"]
         }
