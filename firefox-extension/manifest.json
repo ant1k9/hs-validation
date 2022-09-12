@@ -21,5 +21,18 @@
         "activeTab",
         "storage"
     ],
-    "version": "0.3"
+    "version": "0.3",
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+    },
+    "content_scripts": [
+    {
+        "matches": [
+            "*://stepik.org/*",
+            "*://hyperskill.org/*"
+        ],
+        "js": ["helper.js"]
+    }
+    ]         
 }

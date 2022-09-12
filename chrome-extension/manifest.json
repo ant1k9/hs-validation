@@ -19,10 +19,28 @@
     "permissions": [
         "tabs",
         "scripting",
-        "storage"
+        "storage",
+        "activeTab",
+        "scripting"
     ],
     "host_permissions": [
         "https://stepik.org/",
         "https://hyperskill.org/"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["*://stepik.org/*", "*://hyperskill.org/*"],
+            "js": ["helper.js"],
+            "css": ["helper.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "extension.min.js",
+                "extension.app.js"
+            ],
+            "matches": ["*://stepik.org/*", "*://hyperskill.org/*"]
+        }
     ]
 }

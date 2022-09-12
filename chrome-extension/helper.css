@@ -1,0 +1,24 @@
+.cke_button__testplugin_icon {
+    /* display: none !important; */
+}
+
+.cke_button__testplugin_label, 
+.cke_button__test1_label {
+    display: inline !important;
+    padding-left: 0px !important;
+}
+
+.cke_button__test1_icon {
+    display: none !important;
+}
+
+.hse-buffer,
+#hse-started {
+    display: none;
+    position: fixed;
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    top: -1;
+    left: -1;
+}
