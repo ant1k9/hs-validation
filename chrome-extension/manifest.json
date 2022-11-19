@@ -24,5 +24,19 @@
     "host_permissions": [
         "https://stepik.org/",
         "https://hyperskill.org/"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["*://stepik.org/*", "*://hyperskill.org/*"],
+            "js": ["helper.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "bundle.min.js"
+            ],
+            "matches": ["*://stepik.org/*", "*://hyperskill.org/*"]
+        }
     ]
 }
