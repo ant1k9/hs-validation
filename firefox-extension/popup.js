@@ -32,12 +32,12 @@ const validateTopic = function() {
   browser.tabs.query(
     { active: true, windowId: browser.windows.WINDOW_ID_CURRENT },
     function(tabs) {
-      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
+      if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/1([^\d]|$)/))
         browser.tabs.executeScript(
           tabs[0].id, {
             code: "document.getElementsByClassName('html-content')[0].getElementsByTagName('span')[0].innerHTML"
           }).then(updatePopup(0, "theory"))
-      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+      else if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/\d+/))
         browser.tabs.executeScript(
           tabs[0].id, {
             code: `var description = document.getElementsByClassName('html-content')[0].getElementsByTagName('span')[0].innerHTML + '\\n';
@@ -66,12 +66,12 @@ const validateProject = function() {
   browser.tabs.query(
     { active: true, windowId: browser.windows.WINDOW_ID_CURRENT },
     function(tabs) {
-      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
+      if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/1([^\d]|$)/))
         browser.tabs.executeScript(
           tabs[0].id, {
             code: "document.getElementsByClassName('html-content')[0].getElementsByTagName('span')[0].innerHTML"
           }).then(updatePopup(0, "projectDescription"))
-      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+      else if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/\d+/))
         browser.tabs.executeScript(
           tabs[0].id, {
             code: "document.getElementsByClassName('html-content')[0].getElementsByTagName('span')[0].innerHTML"

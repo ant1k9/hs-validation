@@ -36,7 +36,7 @@ const validateTopic = function() {
   chrome.tabs.query(
     { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
     function(tabs) {
-      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
+      if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/1([^\d]|$)/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},
@@ -47,7 +47,7 @@ const validateTopic = function() {
           },
           updatePopup(0, "theory"),
         );
-      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+      else if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/\d+/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},
@@ -92,7 +92,7 @@ const validateProject = function() {
   chrome.tabs.query(
     { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
     function(tabs) {
-      if (tabs[0].url.match(/.*stepik.org.*\/step\/1([^\d]|$)/))
+      if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/1([^\d]|$)/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},
@@ -103,7 +103,7 @@ const validateProject = function() {
           },
           updatePopup(0, "projectDescription"),
         );
-      else if (tabs[0].url.match(/.*stepik.org.*\/step\/\d+/))
+      else if (tabs[0].url.match(/.*(stepik|cogniterra).org.*\/step\/\d+/))
         chrome.scripting.executeScript(
           {
             target: {tabId: tabs[0].id},

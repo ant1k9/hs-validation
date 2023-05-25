@@ -1,7 +1,7 @@
 {
     "name": "Topic validation",
     "description": "Helper for hyperskill topics creation",
-    "version": "0.3",
+    "version": "0.4",
     "manifest_version": 3,
     "action": {
         "default_popup": "validation.html",
@@ -23,6 +23,7 @@
     ],
     "host_permissions": [
         "https://stepik.org/",
+        "https://cogniterra.org/",
         "https://hyperskill.org/"
     ]
 }

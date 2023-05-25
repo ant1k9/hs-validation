@@ -17,9 +17,10 @@
     "name": "Topic validation",
     "permissions": [
         "*://stepik.org/*",
+        "*://cogniterra.org/*",
         "*://hyperskill.org/*",
         "activeTab",
         "storage"
     ],
-    "version": "0.3"
+    "version": "0.4"
 }
